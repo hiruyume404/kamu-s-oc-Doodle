@@ -171,7 +171,7 @@
       </button>
     </div>
 
-    <!-- 右側：編輯控制台 (預設顯示，但在嵌入網址且不帶 debug 時，加強控制或物理拔除) -->
+    <!-- 右側：編輯控制台 -->
     <div id="editPanel" class="w-full lg:w-96 flex flex-col gap-6 z-20">
       <div class="glass-card rounded-3xl p-6 shadow-2xl flex flex-col gap-5 sticky top-8">
         <div class="border-b border-white/20 dark:border-white/5 pb-3">
@@ -234,17 +234,18 @@
             </div>
           </div>
 
-          <!-- 圖片來源設定 -->
+          <!-- 圖片來源設定 (升級：新增網址清單模式) -->
           <div class="flex flex-col gap-3">
-            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">3. 塗鴉圖片來源設定</label>
+            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">3. 圖片來源與獲取設定</label>
             
-            <!-- 模式選擇 -->
-            <div class="flex bg-white/30 dark:bg-black/20 p-1 rounded-xl border border-white/20">
-              <button onclick="setImageSourceMode('mock')" id="sourceBtnMock" class="flex-1 py-1 text-[11px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm">內建展示</button>
-              <button onclick="setImageSourceMode('custom')" id="sourceBtnCustom" class="flex-1 py-1 text-[11px] font-medium rounded-lg text-center text-slate-500 hover:text-slate-800">GitHub 路徑</button>
+            <!-- 三模選擇 -->
+            <div class="flex bg-white/30 dark:bg-black/20 p-1 rounded-xl border border-white/20 gap-0.5">
+              <button onclick="setImageSourceMode('mock')" id="sourceBtnMock" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300">內建展示</button>
+              <button onclick="setImageSourceMode('custom')" id="sourceBtnCustom" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">GitHub 序號</button>
+              <button onclick="setImageSourceMode('list')" id="sourceBtnList" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">網址清單</button>
             </div>
 
-            <!-- GitHub 參數設定區 (當選 custom 時顯示) -->
+            <!-- GitHub 參數設定區 -->
             <div id="customSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
               <div class="flex flex-col gap-1">
                 <span class="text-[10px] text-slate-400">GitHub 圖片資料夾網址 (結尾加 /)</span>
@@ -266,7 +267,16 @@
                 </div>
               </div>
               <p class="text-[9px] text-slate-400 leading-normal">
-                💡 圖片請命名為 1.jpg, 2.jpg 依此類推。內建 Lazying Loading 懶載入，載入 200+ 張也絕不卡頓！
+                💡 適用於已熟悉並上傳小檔案的玩家。若檔案太大，建議切換為下方「網址清單」模式！
+              </p>
+            </div>
+
+            <!-- 網址清單模式區 (New) -->
+            <div id="listSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
+              <span class="text-[10px] text-slate-400">批次貼入圖片直鏈 (一行輸入一個網址)</span>
+              <textarea id="iptImgList" oninput="updateImgListConfig()" placeholder="https://catbox.moe/example1.png&#10;https://catbox.moe/example2.png&#10;https://catbox.moe/example3.png" rows="4" class="w-full px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono no-scrollbar resize-none"></textarea>
+              <p class="text-[9px] text-slate-400 leading-normal">
+                💡 <b>最推薦！</b> 避開 GitHub 大容量限制，直接將 200+ 塗鴉丟到 Postimages / Catbox / Imgur，再把產出的網址全部複製貼入此框，免部屬也能直接在 Notion 流暢載入！
               </p>
             </div>
           </div>
@@ -345,27 +355,17 @@
 
   <!-- 程式碼腳本邏輯 -->
   <script>
-    // 1. 神奇手繪 SVG 塗鴉範本庫 (提供多種不同主題的日系甜美塗鴉)
+    // 1. 神奇手繪 SVG 塗鴉範本庫
     const doodleSVGs = [
-      // 0. 可愛貓咪
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,60 C30,30 70,30 70,60 C70,75 30,75 30,60 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M30,40 L20,20 L40,32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M70,40 L80,20 L60,32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><circle cx="43" cy="52" r="3" fill="currentColor"/><circle cx="57" cy="52" r="3" fill="currentColor"/><path d="M47,58 Q50,61 53,58" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M15,55 L28,57" stroke="currentColor" stroke-width="2"/><path d="M13,63 L27,61" stroke="currentColor" stroke-width="2"/><path d="M85,55 L72,57" stroke="currentColor" stroke-width="2"/><path d="M87,63 L73,61" stroke="currentColor" stroke-width="2"/><path d="M50,75 Q40,90 45,92 Q50,94 50,75" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="1 1"/></svg>`,
-      // 1. 流星夢境
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M20,20 L80,80" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 8"/><path d="M50,20 Q60,50 90,60 Q60,70 50,100 Q40,70 10,60 Q40,50 50,20 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><circle cx="25" cy="35" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="75" cy="75" r="2.5" fill="currentColor"/></svg>`,
-      // 2. 愛心捧花
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M50,40 Q35,20 25,35 Q15,50 50,80 Q85,50 75,35 Q65,20 50,40 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M35,45 Q40,48 50,40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M65,45 Q60,48 50,40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="30" cy="65" r="2" fill="currentColor"/><circle cx="70" cy="60" r="3" fill="none" stroke="currentColor"/></svg>`,
-      // 3. 療癒小雲朵與雨滴
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M25,55 C20,55 15,50 18,43 C15,35 25,25 35,28 C40,20 55,18 65,25 C75,20 85,30 80,40 C85,48 78,55 70,55 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M30,68 L28,75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M50,70 L48,78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M70,68 L68,75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-      // 4. 太空星球
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M20,60 Q50,35 80,40 Q50,65 20,60" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="45" cy="42" r="3" fill="currentColor"/><circle cx="58" cy="52" r="1.5" fill="currentColor"/><circle cx="15" cy="20" r="1" fill="currentColor"/><circle cx="85" cy="80" r="2" fill="currentColor"/></svg>`,
-      // 5. 櫻花紛飛
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M50,25 C45,10 55,10 50,25 Z M50,25 C65,20 65,30 50,25 Z M50,25 C55,40 45,40 50,25 Z M50,25 C35,30 35,20 50,25 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="25" r="2" fill="currentColor"/><path d="M20,65 Q30,62 35,70" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M75,60 Q70,70 82,68" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`,
-      // 6. 日系魔法杖
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,80 L70,40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="73" cy="37" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M68,37 L78,37" stroke="currentColor" stroke-width="1.5"/><path d="M73,32 L73,42" stroke="currentColor" stroke-width="1.5"/><path d="M62,48 C55,52 50,60 55,65" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`,
-      // 7. 星之花
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><circle cx="50" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M50,15 L50,30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M50,70 L50,85" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15,50 L30,50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M70,50 L85,50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="30" cy="30" r="3" fill="currentColor"/><circle cx="70" cy="70" r="3" fill="currentColor"/></svg>`,
-      // 8. 溫暖香草馬克杯
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,40 L70,40 L65,80 L35,80 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M70,48 C78,48 78,65 70,65" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M42,20 Q45,30 42,35" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M52,18 Q55,28 52,33" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M42,55 Q50,60 58,55" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`,
-      // 9. 夢幻沙漏
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,25 L70,25 L55,50 L70,75 L30,75 L45,50 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><line x1="25" y1="25" x2="75" y2="25" stroke="currentColor" stroke-width="3"/><line x1="25" y1="75" x2="75" y2="75" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="35" r="2" fill="currentColor"/><circle cx="50" cy="65" r="4" fill="currentColor"/><path d="M50,48 L50,58" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/></svg>`
     ];
 
@@ -377,7 +377,7 @@
       '#cbd5e1': { light: '#e2e8f0', dark: '#2d3748', bg: '#f8fafc' }
     };
 
-    // 2. 預設全域設定 (只保留最基本的初始展示數據，其餘未填寫部分不產生任何多餘佔位字)
+    // 2. 預設全域設定 (只保留最基本的初始展示數據，新增 imgList 清單)
     let config = {
       title: "夢境邊緣 ✦ OC 塗鴉相冊",
       subtitle: "Doodles & Sketches Collection",
@@ -385,10 +385,11 @@
       creator: "Painter ✦ 夢境觀察員",
       themeColor: "#ffd1dc",
       isDark: false,
-      sourceMode: "mock", // 'mock' 為內建 SVG, 'custom' 為 GitHub 圖片夾
+      sourceMode: "mock", // 'mock', 'custom', 'list'
       imgPath: "",
       totalImages: 10,
       fileExtension: ".jpg",
+      imgList: [], // 儲存網址清單
       autoplay: false,
       interval: 4,
       customNotes: {
@@ -398,31 +399,26 @@
       }
     };
 
-    // 當前幻燈片索引 (1-based)
     let currentSlideIdx = 1;
     let autoplayTimer = null;
-    let currentViewMode = 'slide'; // 'slide' or 'grid'
+    let currentViewMode = 'slide';
 
     // 3. 初始化載入
     window.onload = function() {
-      // 讀取 URL 加密參數
       loadUrlParams();
       
-      // 套用系統主題
       if (config.isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
 
-      // 初始化 UI 元件數值
       syncConfigToInputs();
       applyTheme();
       buildNoteSelector();
       renderSlide();
       renderGrid();
 
-      // 如果有自動播放
       if (config.autoplay) {
         startAutoplay();
       }
@@ -439,8 +435,8 @@
       document.getElementById('iptFileExt').value = config.fileExtension;
       document.getElementById('iptAutoplay').checked = config.autoplay;
       document.getElementById('iptInterval').value = config.interval;
+      document.getElementById('iptImgList').value = config.imgList.join('\n');
       
-      // 更新顯示
       document.getElementById('dispTitle').innerText = config.title;
       document.getElementById('dispSubtitle').innerText = config.subtitle;
       document.getElementById('dispProject').innerText = config.project;
@@ -449,7 +445,7 @@
       setImageSourceMode(config.sourceMode);
     }
 
-    // 5. 主題配色設定
+    // 5. 主題配色與深色模式
     function selectTheme(color, lightVal, bgVal) {
       config.themeColor = color;
       applyTheme();
@@ -464,14 +460,10 @@
       const color = config.themeColor;
       const themeDetail = themes[color] || { light: color, dark: color, bg: color + '15' };
 
-      // 設定 CSS 變數
       document.documentElement.style.setProperty('--theme-color-light', themeDetail.light);
       document.documentElement.style.setProperty('--theme-color-dark', themeDetail.dark);
-      
-      // 更新齒輪背景色、主頭部 ICON 裝飾
       document.getElementById('themeIcon').style.backgroundColor = themeDetail.light;
       
-      // 絢麗背景調整
       const isDark = document.documentElement.classList.contains('dark');
       const container = document.getElementById('galleryWidget');
       
@@ -481,7 +473,6 @@
         container.style.boxShadow = `0 25px 50px -12px ${color}35`;
       }
       
-      // 更新點點
       updateSlideDots();
     }
 
@@ -495,30 +486,52 @@
       applyTheme();
     }
 
-    // 6. 圖片來源控制 (內建 vs GitHub 路徑)
+    // 6. 三模圖片來源控制 (新增：網址清單 mode = 'list')
     function setImageSourceMode(mode) {
       config.sourceMode = mode;
+      
       const customPanel = document.getElementById('customSourcePanel');
+      const listPanel = document.getElementById('listSourcePanel');
+      
       const btnMock = document.getElementById('sourceBtnMock');
       const btnCustom = document.getElementById('sourceBtnCustom');
+      const btnList = document.getElementById('sourceBtnList');
+
+      // 面板顯示切換
+      customPanel.classList.add('hidden');
+      listPanel.classList.add('hidden');
+      
+      btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+      btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+      btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
 
       if (mode === 'custom') {
         customPanel.classList.remove('hidden');
-        btnCustom.className = "flex-1 py-1 text-[11px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white";
-        btnMock.className = "flex-1 py-1 text-[11px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800";
+        btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
+      } else if (mode === 'list') {
+        listPanel.classList.remove('hidden');
+        btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
       } else {
-        customPanel.classList.add('hidden');
-        btnMock.className = "flex-1 py-1 text-[11px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white";
-        btnCustom.className = "flex-1 py-1 text-[11px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800";
+        btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
       }
 
-      // 重算編號下拉選單與渲染
       buildNoteSelector();
-      if (currentSlideIdx > config.totalImages) {
+      if (currentSlideIdx > getMaxImagesCount()) {
         currentSlideIdx = 1;
       }
       renderSlide();
       renderGrid();
+    }
+
+    // 獲取當前模式下的最大圖片數量
+    function getMaxImagesCount() {
+      if (config.sourceMode === 'mock') {
+        return 10;
+      } else if (config.sourceMode === 'list') {
+        return Math.max(1, config.imgList.length);
+      } else {
+        return config.totalImages;
+      }
     }
 
     function updateImgConfig() {
@@ -527,6 +540,18 @@
       config.fileExtension = document.getElementById('iptFileExt').value;
 
       buildNoteSelector();
+      renderSlide();
+      renderGrid();
+    }
+
+    function updateImgListConfig() {
+      const text = document.getElementById('iptImgList').value;
+      config.imgList = text.split('\n').map(url => url.trim()).filter(url => url.length > 0);
+      
+      buildNoteSelector();
+      if (currentSlideIdx > getMaxImagesCount()) {
+        currentSlideIdx = 1;
+      }
       renderSlide();
       renderGrid();
     }
@@ -541,7 +566,7 @@
     function buildNoteSelector() {
       const select = document.getElementById('selectImgId');
       select.innerHTML = '';
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
 
       for (let i = 1; i <= total; i++) {
         const opt = document.createElement('option');
@@ -574,10 +599,9 @@
       renderSlide();
     }
 
-    // 9. 圖片渲染器（核心防爆防扁機制：SVG 直接返回，圖片則用 object-cover 撐開，加載失敗用備用 SVG）
+    // 9. 圖片渲染器（支援 List 模式直鏈渲染，備用 SVG fallback）
     function getImageHTML(idx, cssClasses = "max-w-full max-h-full object-contain rounded-xl") {
       if (config.sourceMode === 'mock') {
-        // 使用內建極精美日系向量畫布
         const color = config.themeColor;
         const svgContent = doodleSVGs[(idx - 1) % doodleSVGs.length];
         return `
@@ -585,8 +609,20 @@
             ${svgContent}
           </div>
         `;
+      } else if (config.sourceMode === 'list') {
+        const url = config.imgList[idx - 1];
+        if (!url) {
+          // 清單為空或索引溢出時，顯示一個漂亮手繪佔位
+          return imgFallbackPlaceholder(idx);
+        }
+        return `
+          <img src="${url}" 
+               alt="Doodle #${idx}" 
+               loading="lazy"
+               class="${cssClasses}" 
+               onerror="imgLoadError(this, ${idx})">
+        `;
       } else {
-        // 真實外部 GitHub 圖片流 (搭載 Lazy loading 與 Error 回歸機制)
         const imgSrc = `${config.imgPath}${idx}${config.fileExtension}`;
         return `
           <img src="${imgSrc}" 
@@ -598,18 +634,21 @@
       }
     }
 
-    // 圖片載入失敗回歸：轉為 SVG 手繪風格
+    function imgFallbackPlaceholder(idx) {
+      const color = config.themeColor;
+      const svgContent = doodleSVGs[(idx - 1) % doodleSVGs.length];
+      return `
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 transition-all duration-500" style="color: ${color}40;">
+          ${svgContent}
+          <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">暫未填寫圖片直鏈 #${idx}</span>
+        </div>
+      `;
+    }
+
     function imgLoadError(imgElement, idx) {
       const parent = imgElement.parentElement;
       if (parent) {
-        const color = config.themeColor;
-        const svgContent = doodleSVGs[(idx - 1) % doodleSVGs.length];
-        parent.innerHTML = `
-          <div class="w-full h-full flex flex-col items-center justify-center p-6 text-slate-300 dark:text-zinc-700 hover:scale-105 transition-transform" style="color: ${color}70;">
-            ${svgContent}
-            <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">未偵測到外部圖檔 #${idx}</span>
-          </div>
-        `;
+        parent.innerHTML = imgFallbackPlaceholder(idx);
       }
     }
 
@@ -637,18 +676,16 @@
       }
     }
 
-    // 11. 幻燈片控制邏輯 (修改：無備註時自動極簡摺疊)
+    // 11. 幻燈片控制邏輯
     function renderSlide() {
       const container = document.getElementById('slideImageContainer');
       container.innerHTML = getImageHTML(currentSlideIdx, "max-w-full max-h-full object-contain rounded-xl hover:scale-[1.02] transition-transform duration-500 cursor-pointer");
       container.onclick = () => openLightbox(currentSlideIdx);
 
-      // 讀取當前備註資料
       const note = config.customNotes[currentSlideIdx] || { title: "", desc: "" };
       const hasTitle = !!note.title;
       const hasDesc = !!note.desc;
 
-      // 更新序號與標題
       document.getElementById('slideNumTag').innerText = `#${String(currentSlideIdx).padStart(2, '0')}`;
       
       const titleEl = document.getElementById('slideTitle');
@@ -659,7 +696,6 @@
         titleEl.style.display = 'none';
       }
 
-      // 更新備註
       const descEl = document.getElementById('slideNote');
       if (hasDesc) {
         descEl.innerText = note.desc;
@@ -668,7 +704,6 @@
         descEl.style.display = 'none';
       }
 
-      // 如果完全沒有標題與備註，整體面板將自動塌陷/極簡化以保持純畫廊通透感
       const panelEl = document.getElementById('slideNotePanel');
       if (!hasTitle && !hasDesc) {
         panelEl.className = "mt-4 p-3 rounded-2xl bg-white/20 dark:bg-zinc-900/10 border border-white/10 dark:border-white/5 flex items-center justify-between transition-all duration-300";
@@ -676,20 +711,20 @@
         panelEl.className = "mt-4 p-4 rounded-2xl bg-white/50 dark:bg-zinc-900/30 border border-white/20 dark:border-white/5 flex flex-col gap-1 transition-all duration-300";
       }
       
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
       document.getElementById('slideCounter').innerText = `${String(currentSlideIdx).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
 
       updateSlideDots();
     }
 
     function prevSlide() {
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
       currentSlideIdx = currentSlideIdx - 1 < 1 ? total : currentSlideIdx - 1;
       renderSlide();
     }
 
     function nextSlide() {
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
       currentSlideIdx = currentSlideIdx + 1 > total ? 1 : currentSlideIdx + 1;
       renderSlide();
     }
@@ -702,9 +737,8 @@
     function updateSlideDots() {
       const dotsContainer = document.getElementById('slideDots');
       dotsContainer.innerHTML = '';
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
 
-      // 如果圖片總數超過 20 張，自動隱藏下方點點避免畫面凌亂
       if (total > 20) {
         dotsContainer.style.display = 'none';
         return;
@@ -725,7 +759,7 @@
       }
     }
 
-    // 12. 自動播放設定
+    // 12. 自動播放控制
     function toggleAutoplayConfig(isChecked) {
       config.autoplay = isChecked;
       if (isChecked) {
@@ -759,24 +793,22 @@
       }
     }
 
-    // 13. 相片牆渲染 (修改：無自訂標題時 hover 僅顯示極簡純序號，乾淨優雅)
+    // 13. 相片牆網格渲染
     function renderGrid() {
       const grid = document.getElementById('gridContainer');
       grid.innerHTML = '';
-      const total = config.sourceMode === 'mock' ? 10 : config.totalImages;
+      const total = getMaxImagesCount();
 
       for (let i = 1; i <= total; i++) {
         const item = document.createElement('div');
         item.className = "relative aspect-square rounded-2xl overflow-hidden bg-white/20 dark:bg-black/15 border border-white/20 dark:border-white/5 flex items-center justify-center p-3 cursor-pointer hover:scale-[1.03] hover:shadow-lg hover:border-pink-200 dark:hover:border-zinc-700 transition-all duration-300 group shadow-inner";
         item.onclick = () => openLightbox(i);
 
-        // 圖片內容
         const imgWrapper = document.createElement('div');
         imgWrapper.className = "w-full h-full flex items-center justify-center select-none";
         imgWrapper.innerHTML = getImageHTML(i, "max-w-full max-h-full object-contain rounded-xl");
         item.appendChild(imgWrapper);
 
-        // 浮動遮罩
         const mask = document.createElement('div');
         mask.className = "absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-white rounded-2xl";
         const note = config.customNotes[i] || { title: "", desc: "" };
@@ -791,7 +823,7 @@
       }
     }
 
-    // 14. 燈箱 (Lightbox) 控制 (修改：空白備註時直接將備註面板從 Lightbox 隱藏)
+    // 14. 燈箱燈箱控制
     function openLightbox(idx) {
       const lightbox = document.getElementById('lightbox');
       const content = document.getElementById('lightboxContent');
@@ -805,7 +837,6 @@
       const hasTitle = !!savedNote.title;
       const hasDesc = !!savedNote.desc;
 
-      // 如果有任何自訂文字，顯示磨砂玻璃備註區，否則 100% 隱藏，不留下任何干擾框
       if (hasTitle || hasDesc) {
         infoPanel.style.display = 'block';
         title.innerText = savedNote.title || `#${String(idx).padStart(2, '0')}`;
@@ -832,7 +863,6 @@
     // 15. Notion 嵌入：加密打包與解密讀取
     function generateEmbedUrl() {
       try {
-        // 過濾多餘預設無用備註以縮小網址大小
         const cleanedNotes = {};
         for (const [key, value] of Object.entries(config.customNotes)) {
           if (value.title || value.desc) {
@@ -851,6 +881,7 @@
           ip: config.imgPath,
           ti: config.totalImages,
           fe: config.fileExtension,
+          il: config.imgList, // 匯出清單
           ap: config.autoplay,
           it: config.interval,
           n: cleanedNotes
@@ -859,11 +890,9 @@
         const jsonStr = JSON.stringify(dataToEncode);
         const encodedData = btoa(encodeURIComponent(jsonStr));
         
-        // 獲取目前不帶雜訊的基礎 URL
         const baseUrl = window.location.origin + window.location.pathname;
         const embedUrl = `${baseUrl}?embed=true#${encodedData}`;
 
-        // 寫入剪貼簿 (Notion 內置安全調用)
         copyToClipboard(embedUrl);
         showToast("🌸 專屬加密網址複製成功！貼入 Notion 選擇「Create Embed」即可！");
       } catch (err) {
@@ -877,13 +906,10 @@
       const isEmbed = urlParams.get('embed') === 'true';
 
       if (isEmbed) {
-        // Notion 嵌入特化：完全隱藏編輯面板與背景特效，保持絕對乾淨通透
         document.getElementById('editPanel').remove(); 
         document.getElementById('glowBg').remove();
         document.getElementById('galleryWidget').classList.add('transparent-bg', 'shadow-none');
         document.getElementById('galleryWidget').classList.remove('glass-card');
-        
-        // 開啟隱藏式齒輪以防 Notion 端仍有微調需求
         document.getElementById('embedSettingsBtn').classList.remove('hidden');
       }
 
@@ -902,6 +928,7 @@
           config.imgPath = data.ip || config.imgPath;
           config.totalImages = data.ti || config.totalImages;
           config.fileExtension = data.fe || config.fileExtension;
+          config.imgList = data.il || config.imgList; // 載入清單
           config.autoplay = data.ap !== undefined ? data.ap : config.autoplay;
           config.interval = data.it || config.interval;
           config.customNotes = data.n || config.customNotes;
@@ -913,7 +940,6 @@
     }
 
     function toggleEditor() {
-      // 提供在 Notion 端能隨時跳轉回原始連結重新編輯之功能
       const baseUrl = window.location.href.split('?')[0];
       const editWindow = window.open(baseUrl + window.location.hash, '_blank');
       showToast("🌸 已在新視窗開啟編輯模式！");
@@ -927,7 +953,6 @@
       }
     }
 
-    // 輔助工具：安全剪貼簿複製
     function copyToClipboard(text) {
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text);
@@ -947,11 +972,9 @@
       }
     }
 
-    // 輔助工具：Toast 系統
     function showToast(message, type = "success") {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-      
       const themeColor = config.themeColor;
       
       toast.className = "px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg border backdrop-blur-md transform translate-y-2 opacity-0 transition-all duration-300 flex items-center gap-2";
@@ -966,12 +989,10 @@
       toast.innerText = message;
       container.appendChild(toast);
 
-      // 動態演出
       setTimeout(() => {
         toast.classList.remove('translate-y-2', 'opacity-0');
       }, 50);
 
-      // 自動移除
       setTimeout(() => {
         toast.classList.add('translate-y-2', 'opacity-0');
         setTimeout(() => toast.remove(), 300);
