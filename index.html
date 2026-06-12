@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>特鹽風 ✦ OC 塗鴉牆與多功能相簿設計器</title>
+  <title>特鹽風 ✦ OC 極簡塗鴉牆設計器</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -31,9 +31,6 @@
   <style>
     body {
       font-family: 'Noto Sans TC', sans-serif;
-    }
-    .serif-quote {
-      font-family: 'Playfair Display', 'Noto Sans TC', serif;
     }
     /* 隱藏滾動條但保持功能 */
     .no-scrollbar::-webkit-scrollbar {
@@ -64,7 +61,7 @@
 </head>
 <body class="h-full bg-slate-50 dark:bg-[#191919] text-slate-800 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
 
-  <!-- 炫光背景效果 (僅在非嵌入編輯模式下顯示) -->
+  <!-- 炫光背景效果 (僅在編輯模式下顯示) -->
   <div id="glowBg" class="fixed -inset-[10px] opacity-30 pointer-events-none z-0 transition-all duration-700">
     <div class="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-pink-300 dark:bg-pink-900/30 blur-[100px] animate-pulse"></div>
     <div class="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] rounded-full bg-indigo-300 dark:bg-purple-900/30 blur-[120px] animate-pulse" style="animation-duration: 8s;"></div>
@@ -79,29 +76,26 @@
       <!-- 相簿主卡片 -->
       <div id="galleryWidget" class="w-full max-w-4xl glass-card rounded-3xl p-6 shadow-2xl transition-all duration-500 flex flex-col gap-5">
         
-        <!-- 卡片頭部：控制與標題 -->
-        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/20 dark:border-white/5 pb-4">
-          <div class="flex items-center gap-3">
-            <div id="themeIcon" class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-inner transition-colors duration-300" style="background-color: var(--theme-color-light, #ffd1dc);">
-              <svg class="w-5 h-5 text-slate-700 dark:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <!-- 卡片頭部：極簡控制與模式切換 -->
+        <div class="flex items-center justify-between gap-4 border-b border-white/20 dark:border-white/5 pb-4">
+          <div class="flex items-center gap-2.5">
+            <div id="themeIcon" class="w-8 h-8 rounded-xl flex items-center justify-center shadow-inner transition-colors duration-300" style="background-color: var(--theme-color-light, #ffd1dc);">
+              <svg class="w-4 h-4 text-slate-700 dark:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <div>
-              <h1 id="dispTitle" class="text-lg font-bold tracking-wider text-slate-900 dark:text-white">夢境邊緣 ✦ OC 塗鴉相冊</h1>
-              <p id="dispSubtitle" class="text-xs text-slate-500 dark:text-slate-400">Doodles & Sketches Collection</p>
-            </div>
+            <span class="text-xs font-bold tracking-widest text-slate-500 dark:text-slate-400">ARTWORKS</span>
           </div>
 
           <!-- 模式切換按鈕 -->
           <div class="flex bg-white/40 dark:bg-black/25 p-1 rounded-2xl border border-white/30 dark:border-white/5">
             <button id="btnSlideMode" onclick="switchMode('slide')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-300 bg-white dark:bg-zinc-800 shadow-sm text-slate-950 dark:text-white">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              幻燈片模式
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              幻燈片播放
             </button>
             <button id="btnGridMode" onclick="switchMode('grid')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-300 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-              相片牆網格
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              瀑布流牆
             </button>
           </div>
         </div>
@@ -125,23 +119,14 @@
             <!-- 右上角自動播放指示 -->
             <div id="autoplayBadge" class="hidden absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-1 rounded-lg flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              Auto Playing
+              Auto
             </div>
           </div>
 
-          <!-- 下方故事備註面板 -->
-          <div id="slideNotePanel" class="mt-4 p-4 rounded-2xl bg-white/50 dark:bg-zinc-900/30 border border-white/20 dark:border-white/5 flex flex-col gap-1 transition-all duration-300 min-h-0 justify-center">
-            <div class="flex items-center justify-between w-full">
-              <!-- 精緻序號標籤 -->
-              <div id="slideNumTag" class="text-xs font-mono font-bold tracking-widest text-slate-400 dark:text-slate-500 mr-2">#01</div>
-              <h3 id="slideTitle" class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5 truncate mr-4">
-                <!-- 標題 -->
-              </h3>
-              <span id="slideCounter" class="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-white/80 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 border border-white/10 ml-auto shrink-0">01 / 10</span>
-            </div>
-            <p id="slideNote" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-1 transition-all duration-300">
-              <!-- 備註說明 -->
-            </p>
+          <!-- 下方極簡頁數計數器 -->
+          <div class="mt-4 flex items-center justify-between px-2">
+            <span id="slideNumTag" class="text-xs font-mono font-bold tracking-widest text-slate-400 dark:text-slate-500">#01</span>
+            <span id="slideCounter" class="text-[10px] font-mono tracking-wider px-2.5 py-0.5 rounded-full bg-slate-200/50 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 border border-white/10 ml-auto shrink-0">01 / 10</span>
           </div>
           
           <!-- 滑桿小圓點 -->
@@ -152,17 +137,12 @@
 
         <!-- 視圖 B：相片牆 -->
         <div id="viewGrid" class="hidden w-full flex flex-col gap-4">
-          <!-- 瀑布流/Grid 容器 -->
+          <!-- 網格容器 -->
           <div id="gridContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto pr-1 no-scrollbar scroll-smooth">
             <!-- 網格縮圖 -->
           </div>
         </div>
 
-        <!-- 卡片尾部 -->
-        <div class="flex items-center justify-between border-t border-white/20 dark:border-white/5 pt-4 text-[10px] text-slate-400 dark:text-slate-500">
-          <span id="dispProject">企劃所屬 ✦ 星光夢境記錄企劃</span>
-          <span id="dispCreator">Painter ✦ 夢境觀察員</span>
-        </div>
       </div>
 
       <!-- Notion 嵌入模式的齒輪按鈕 -->
@@ -180,7 +160,7 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-pink-500"></span>
             </span>
-            特鹽風相冊 ✦ 設計控制台
+            極簡塗鴉牆設計台
           </h2>
           <p class="text-[10px] text-slate-400 mt-1">自訂卡片配色，並打包成永久保存的網址</p>
         </div>
@@ -211,32 +191,9 @@
             </div>
           </div>
 
-          <!-- 基礎文字資料設定 -->
-          <div class="flex flex-col gap-3">
-            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">2. 基礎資訊設定</label>
-            <div class="grid grid-cols-2 gap-2">
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">相簿主標題</span>
-                <input type="text" id="iptTitle" oninput="updateDisp('Title', this.value)" placeholder="例：夢境邊緣" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300">
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">副標題</span>
-                <input type="text" id="iptSubtitle" oninput="updateDisp('Subtitle', this.value)" placeholder="例：Doodles Collection" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300">
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">所屬企劃</span>
-                <input type="text" id="iptProject" oninput="updateDisp('Project', this.value)" placeholder="例：星光夢境記錄企劃" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300">
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">作者名稱</span>
-                <input type="text" id="iptCreator" oninput="updateDisp('Creator', this.value)" placeholder="例：夢境觀察員" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300">
-              </div>
-            </div>
-          </div>
-
           <!-- 圖片來源設定 -->
           <div class="flex flex-col gap-3">
-            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">3. 圖片來源與託管設定</label>
+            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">2. 圖片來源與託管設定</label>
             
             <!-- 三模選擇 -->
             <div class="flex bg-white/30 dark:bg-black/20 p-1 rounded-xl border border-white/20 gap-0.5">
@@ -245,10 +202,10 @@
               <button onclick="setImageSourceMode('list')" id="sourceBtnList" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">網址清單</button>
             </div>
 
-            <!-- 託管參數設定區 (智慧適應多資料夾分流模式) -->
+            <!-- 託管參數設定區 (智慧適應 image/ image(2)/ image(3) 路由分流) -->
             <div id="customSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
               <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">預設資料夾相對路徑 (不需更動)</span>
+                <span class="text-[10px] text-slate-400">資料夾相對路徑 (預設即可)</span>
                 <input type="text" id="iptImgPath" oninput="updateImgConfig()" placeholder="./image/" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono">
               </div>
               <div class="grid grid-cols-2 gap-2">
@@ -267,43 +224,28 @@
                 </div>
               </div>
               <p class="text-[9px] text-slate-400 leading-normal">
-                🚀 <b>智慧分流開啟：</b>系統偵測到您拆分了資料夾。圖片編號 1~100 會從 <code class="text-pink-500 font-mono">image/</code> 讀取，101~200 從 <code class="text-pink-500 font-mono">image(2)/</code> 讀取，201+ 從 <code class="text-pink-500 font-mono">image(3)/</code> 讀取！
+                🚀 <b>智慧分流已啟用：</b><br>
+                1~100張 從 <code class="text-pink-500 font-mono">image/</code> 讀取<br>
+                101~200張 從 <code class="text-pink-500 font-mono">image(2)/</code> 讀取<br>
+                201~300張 從 <code class="text-pink-500 font-mono">image(3)/</code> 讀取！
               </p>
             </div>
 
             <!-- 網址清單模式區 -->
             <div id="listSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
               <span class="text-[10px] text-slate-400">批次貼入圖片直鏈 (一行輸入一個網址)</span>
-              <textarea id="iptImgList" oninput="updateImgListConfig()" placeholder="https://catbox.moe/example1.png&#10;https://catbox.moe/example2.png&#10;https://catbox.moe/example3.png" rows="4" class="w-full px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono no-scrollbar resize-none"></textarea>
+              <textarea id="iptImgList" oninput="updateImgListConfig()" placeholder="https://catbox.moe/example1.png&#10;https://catbox.moe/example2.png&#10;https://catbox.moe/example3.png" rows="5" class="w-full px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono no-scrollbar resize-none"></textarea>
               <p class="text-[9px] text-slate-400 leading-normal">
-                💡 <b>免部署：</b>若不想使用 GitHub Pages 託管，可將塗鴉批次上傳至 Postimages 等圖床，在此一行貼一個網址。
+                💡 <b>免部署！</b>將塗鴉批次上傳至 Postimages 等圖床，取得「直接連結」並在此一行貼一個網址即可。
               </p>
             </div>
           </div>
 
-          <!-- 備註說明清單設定 -->
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">4. 編輯個別塗鴉備註</label>
-              <span class="text-[9px] bg-pink-100 dark:bg-pink-900/30 text-pink-500 px-1.5 py-0.5 rounded-md">故事設定</span>
-            </div>
-            <div class="flex gap-1.5">
-              <select id="selectImgId" onchange="loadCurrentNoteToEditor()" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none dark:text-white w-20 bg-slate-100">
-                <!-- 動態生成的編號下拉 -->
-              </select>
-              <input type="text" id="iptNoteTitle" placeholder="無標題 (選填)" class="flex-1 px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300">
-            </div>
-            <textarea id="iptNoteDesc" placeholder="無繪製背景、OC 故事 (選填，保留空白則隱藏面板)" rows="2" class="w-full px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none focus:border-pink-300 resize-none"></textarea>
-            <button onclick="saveCurrentNote()" class="w-full py-1.5 text-xs font-semibold rounded-xl bg-white/80 dark:bg-zinc-800 hover:bg-pink-100 dark:hover:bg-zinc-700 text-slate-700 dark:text-slate-200 border border-pink-200 dark:border-zinc-700 shadow-sm active:scale-95 transition-all">
-              保存此張備註
-            </button>
-          </div>
-
           <!-- 幻燈片設定 -->
           <div class="flex flex-col gap-2 p-3 rounded-2xl bg-white/30 dark:bg-black/20 border border-white/20">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">5. 幻燈片播放設定</span>
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">3. 幻燈片自動播放設定</span>
             <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-500">自動播放幻燈片</span>
+              <span class="text-xs text-slate-500">自動播放</span>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="iptAutoplay" onchange="toggleAutoplayConfig(this.checked)" class="sr-only peer">
                 <div class="w-9 h-5 bg-gray-200 dark:bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-400"></div>
@@ -338,15 +280,10 @@
     <button onclick="closeLightbox()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/10 transition-all">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
-    <div class="relative max-w-5xl max-h-[80vh] flex items-center justify-center" onclick="event.stopPropagation()">
+    <div class="relative max-w-5xl max-h-[85vh] flex items-center justify-center animate-zoom-in" onclick="event.stopPropagation()">
       <div id="lightboxContent" class="w-full h-full flex items-center justify-center">
-        <!-- 放大圖片或 SVG -->
+        <!-- 放大圖片 -->
       </div>
-    </div>
-    <!-- 燈箱備註面板 -->
-    <div id="lightboxInfoPanel" class="mt-4 p-4 max-w-2xl bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl text-center" onclick="event.stopPropagation()">
-      <h4 id="lightboxTitle" class="text-sm font-bold text-white">塗鴉作品</h4>
-      <p id="lightboxNote" class="text-xs text-slate-300 leading-relaxed mt-1">無描述備註</p>
     </div>
   </div>
 
@@ -369,6 +306,7 @@
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,25 L70,25 L55,50 L70,75 L30,75 L45,50 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><line x1="25" y1="25" x2="75" y2="25" stroke="currentColor" stroke-width="3"/><line x1="25" y1="75" x2="75" y2="75" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="35" r="2" fill="currentColor"/><circle cx="50" cy="65" r="4" fill="currentColor"/><path d="M50,48 L50,58" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/></svg>`
     ];
 
+    // 主題色調配置對照表 (修復：先前被意外遺漏的 themes 物件定義)
     const themes = {
       '#ffd1dc': { light: '#ffd1dc', dark: '#502a33', bg: '#fff0f3' },
       '#e8dbfc': { light: '#e8dbfc', dark: '#372a50', bg: '#f7f3fd' },
@@ -377,26 +315,17 @@
       '#cbd5e1': { light: '#e2e8f0', dark: '#2d3748', bg: '#f8fafc' }
     };
 
-    // 2. 預設全域設定
+    // 預設設定 (將所有冗長文字與命名備註功能 100% 物理移除)
     let config = {
-      title: "夢境邊緣 ✦ OC 塗鴉相冊",
-      subtitle: "Doodles & Sketches Collection",
-      project: "企劃所屬 ✦ 星光夢境記錄企劃",
-      creator: "Painter ✦ 夢境觀察員",
       themeColor: "#ffd1dc",
       isDark: false,
       sourceMode: "mock", // 'mock', 'custom', 'list'
       imgPath: "",
       totalImages: 10,
       fileExtension: ".jpg",
-      imgList: [], // 儲存網址清單
+      imgList: [],
       autoplay: false,
-      interval: 4,
-      customNotes: {
-        1: { title: "櫻之境界", desc: "在無光深淵中綻放的第一朵夢境櫻花，是魔法少女靈魂的起點。" },
-        2: { title: "流星墜落的瞬間", desc: "那一天，天空下起了溫暖的微光雨，我們默默許下了不分開的約定。" },
-        3: { title: "粉紅守護之心", desc: "不論未來的命運多麼殘酷，這束手繪的愛心會永遠照亮前進的路。" }
-      }
+      interval: 4
     };
 
     let currentSlideIdx = 1;
@@ -415,7 +344,6 @@
 
       syncConfigToInputs();
       applyTheme();
-      buildNoteSelector();
       renderSlide();
       renderGrid();
 
@@ -426,27 +354,18 @@
 
     // 4. 同步資料與控制台輸入框
     function syncConfigToInputs() {
-      document.getElementById('iptTitle').value = config.title;
-      document.getElementById('iptSubtitle').value = config.subtitle;
-      document.getElementById('iptProject').value = config.project;
-      document.getElementById('iptCreator').value = config.creator;
-      document.getElementById('iptImgPath').value = config.imgPath || "./image/"; // 預設改成您的 image
+      document.getElementById('iptImgPath').value = config.imgPath || "./image/";
       document.getElementById('iptTotalImages').value = config.totalImages;
       document.getElementById('iptFileExt').value = config.fileExtension;
       document.getElementById('iptAutoplay').checked = config.autoplay;
       document.getElementById('iptInterval').value = config.interval;
       document.getElementById('iptImgList').value = config.imgList.join('\n');
       
-      document.getElementById('dispTitle').innerText = config.title;
-      document.getElementById('dispSubtitle').innerText = config.subtitle;
-      document.getElementById('dispProject').innerText = config.project;
-      document.getElementById('dispCreator').innerText = config.creator;
-
       setImageSourceMode(config.sourceMode);
     }
 
     // 5. 主題配色與深色模式
-    function selectTheme(color, lightVal, bgVal) {
+    function selectTheme(color) {
       config.themeColor = color;
       applyTheme();
     }
@@ -486,7 +405,7 @@
       applyTheme();
     }
 
-    // 6. 三模圖片來源控制
+    // 6. 圖片來源控制 (適應三模與多資料夾分箱路徑計算)
     function setImageSourceMode(mode) {
       config.sourceMode = mode;
       
@@ -497,7 +416,6 @@
       const btnCustom = document.getElementById('sourceBtnCustom');
       const btnList = document.getElementById('sourceBtnList');
 
-      // 面板顯示切換
       customPanel.classList.add('hidden');
       listPanel.classList.add('hidden');
       
@@ -515,7 +433,6 @@
         btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
       }
 
-      buildNoteSelector();
       if (currentSlideIdx > getMaxImagesCount()) {
         currentSlideIdx = 1;
       }
@@ -523,7 +440,6 @@
       renderGrid();
     }
 
-    // 獲取當前模式下的最大圖片數量
     function getMaxImagesCount() {
       if (config.sourceMode === 'mock') {
         return 10;
@@ -539,7 +455,6 @@
       config.totalImages = parseInt(document.getElementById('iptTotalImages').value) || 10;
       config.fileExtension = document.getElementById('iptFileExt').value;
 
-      buildNoteSelector();
       renderSlide();
       renderGrid();
     }
@@ -548,7 +463,6 @@
       const text = document.getElementById('iptImgList').value;
       config.imgList = text.split('\n').map(url => url.trim()).filter(url => url.length > 0);
       
-      buildNoteSelector();
       if (currentSlideIdx > getMaxImagesCount()) {
         currentSlideIdx = 1;
       }
@@ -556,76 +470,30 @@
       renderGrid();
     }
 
-    // 7. 文字動態反映
-    function updateDisp(field, value) {
-      config[field.toLowerCase()] = value;
-      document.getElementById(`disp${field}`).innerText = value;
-    }
-
-    // 8. 備註清單自訂控制
-    function buildNoteSelector() {
-      const select = document.getElementById('selectImgId');
-      select.innerHTML = '';
-      const total = getMaxImagesCount();
-
-      for (let i = 1; i <= total; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = `第 ${i} 張`;
-        select.appendChild(opt);
-      }
-      loadCurrentNoteToEditor();
-    }
-
-    function loadCurrentNoteToEditor() {
-      const idx = document.getElementById('selectImgId').value;
-      const note = config.customNotes[idx] || { title: "", desc: "" };
-      document.getElementById('iptNoteTitle').value = note.title || ""; 
-      document.getElementById('iptNoteDesc').value = note.desc || "";
-    }
-
-    function saveCurrentNote() {
-      const idx = document.getElementById('selectImgId').value;
-      const title = document.getElementById('iptNoteTitle').value.trim();
-      const desc = document.getElementById('iptNoteDesc').value.trim();
-
-      if (!config.customNotes[idx]) {
-        config.customNotes[idx] = {};
-      }
-      config.customNotes[idx].title = title;
-      config.customNotes[idx].desc = desc;
-
-      showToast(`✨ 第 ${idx} 張作品故事已儲存！`);
-      renderSlide();
-    }
-
-    // 9. 核心智慧分流路徑計算：自動處理 image, image(2), image(3) 的路由分發
+    // 7. 核心智慧分流路徑計算：無感將 1~100張, 101~200張, 201+張 指向對應資料夾
     function getSmartRoutedPath(idx, originalPath) {
       let path = originalPath.trim();
       if (!path) {
-        path = "./image/"; // 預設為 ./image/
+        path = "./image/";
       }
       if (!path.endsWith('/')) {
         path += '/';
       }
 
-      // 如果路徑中有 image 字樣，觸發分箱分流算法
+      // 如果路徑中有 image 字樣，觸發分箱自動路徑調度
       if (/image/i.test(path)) {
         if (idx > 200) {
-          // 201+ 歸入 image(3)
           return path.replace(/image(\(\d+\))?\/?$/i, "image(3)/");
         } else if (idx > 100) {
-          // 101~200 歸入 image(2)
           return path.replace(/image(\(\d+\))?\/?$/i, "image(2)/");
         } else {
-          // 1~100 歸入原本的 image
           return path.replace(/image(\(\d+\))?\/?$/i, "image/");
         }
       }
       return path;
     }
 
-    // 10. 圖片渲染器（支援相對目錄多資料夾自動分流與外部直鏈）
+    // 8. 圖片渲染
     function getImageHTML(idx, cssClasses = "max-w-full max-h-full object-contain rounded-xl") {
       if (config.sourceMode === 'mock') {
         const color = config.themeColor;
@@ -648,7 +516,6 @@
                onerror="imgLoadError(this, ${idx})">
         `;
       } else {
-        // 動態呼叫智慧分流路由
         const targetFolder = getSmartRoutedPath(idx, config.imgPath);
         const imgSrc = `${targetFolder}${idx}${config.fileExtension}`;
         return `
@@ -667,7 +534,7 @@
       return `
         <div class="w-full h-full flex flex-col items-center justify-center p-6 transition-all duration-500" style="color: ${color}40;">
           ${svgContent}
-          <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">暫未偵測到外部圖檔 #${idx}</span>
+          <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">未偵測到外部圖檔 #${idx}</span>
         </div>
       `;
     }
@@ -679,7 +546,7 @@
       }
     }
 
-    // 11. 雙視圖模式切換
+    // 9. 雙視圖切換
     function switchMode(mode) {
       currentViewMode = mode;
       const viewSlide = document.getElementById('viewSlide');
@@ -703,41 +570,14 @@
       }
     }
 
-    // 12. 幻燈片控制邏輯
+    // 10. 幻燈片渲染
     function renderSlide() {
       const container = document.getElementById('slideImageContainer');
-      container.innerHTML = getImageHTML(currentSlideIdx, "max-w-full max-h-full object-contain rounded-xl hover:scale-[1.02] transition-transform duration-500 cursor-pointer");
+      container.innerHTML = getImageHTML(currentSlideIdx, "max-w-full max-h-full object-contain rounded-xl hover:scale-[1.01] transition-transform duration-500 cursor-pointer");
       container.onclick = () => openLightbox(currentSlideIdx);
 
-      const note = config.customNotes[currentSlideIdx] || { title: "", desc: "" };
-      const hasTitle = !!note.title;
-      const hasDesc = !!note.desc;
-
+      // 更新極簡指示序號
       document.getElementById('slideNumTag').innerText = `#${String(currentSlideIdx).padStart(2, '0')}`;
-      
-      const titleEl = document.getElementById('slideTitle');
-      if (hasTitle) {
-        titleEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${config.themeColor};"></span>${note.title}`;
-        titleEl.style.display = 'flex';
-      } else {
-        titleEl.style.display = 'none';
-      }
-
-      const descEl = document.getElementById('slideNote');
-      if (hasDesc) {
-        descEl.innerText = note.desc;
-        descEl.style.display = 'block';
-      } else {
-        descEl.style.display = 'none';
-      }
-
-      const panelEl = document.getElementById('slideNotePanel');
-      if (!hasTitle && !hasDesc) {
-        panelEl.className = "mt-4 p-3 rounded-2xl bg-white/20 dark:bg-zinc-900/10 border border-white/10 dark:border-white/5 flex items-center justify-between transition-all duration-300";
-      } else {
-        panelEl.className = "mt-4 p-4 rounded-2xl bg-white/50 dark:bg-zinc-900/30 border border-white/20 dark:border-white/5 flex flex-col gap-1 transition-all duration-300";
-      }
-      
       const total = getMaxImagesCount();
       document.getElementById('slideCounter').innerText = `${String(currentSlideIdx).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
 
@@ -766,7 +606,8 @@
       dotsContainer.innerHTML = '';
       const total = getMaxImagesCount();
 
-      if (total > 20) {
+      // 超過 15 張自動不渲染點點，維持最乾淨極簡的卡片高度
+      if (total > 15) {
         dotsContainer.style.display = 'none';
         return;
       }
@@ -786,7 +627,7 @@
       }
     }
 
-    // 13. 自動播放控制
+    // 11. 自動播放控制
     function toggleAutoplayConfig(isChecked) {
       config.autoplay = isChecked;
       if (isChecked) {
@@ -798,6 +639,7 @@
       }
     }
 
+    // 播放速度調整
     function updateInterval(seconds) {
       config.interval = parseInt(seconds) || 4;
       if (config.autoplay) {
@@ -820,7 +662,7 @@
       }
     }
 
-    // 14. 相片牆網格渲染
+    // 12. 相片牆網格渲染
     function renderGrid() {
       const grid = document.getElementById('gridContainer');
       grid.innerHTML = '';
@@ -828,6 +670,7 @@
 
       for (let i = 1; i <= total; i++) {
         const item = document.createElement('div');
+        // 極簡無標題 hover 設計：微放大發光
         item.className = "relative aspect-square rounded-2xl overflow-hidden bg-white/20 dark:bg-black/15 border border-white/20 dark:border-white/5 flex items-center justify-center p-3 cursor-pointer hover:scale-[1.03] hover:shadow-lg hover:border-pink-200 dark:hover:border-zinc-700 transition-all duration-300 group shadow-inner";
         item.onclick = () => openLightbox(i);
 
@@ -836,47 +679,22 @@
         imgWrapper.innerHTML = getImageHTML(i, "max-w-full max-h-full object-contain rounded-xl");
         item.appendChild(imgWrapper);
 
-        const mask = document.createElement('div');
-        mask.className = "absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-white rounded-2xl";
-        const note = config.customNotes[i] || { title: "", desc: "" };
-        
-        mask.innerHTML = `
-          <span class="text-[10px] font-mono tracking-wider text-pink-200 opacity-90">#${String(i).padStart(2, '0')}</span>
-          ${note.title ? `<h4 class="text-xs font-bold truncate mt-0.5">${note.title}</h4>` : ''}
-        `;
-        
-        item.appendChild(mask);
+        // 浮動遮罩僅在左下角標註超極簡序號，不再占大區塊顯示空白作品字樣
+        const tag = document.createElement('div');
+        tag.className = "absolute bottom-3 left-3 bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-lg text-[9px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300";
+        tag.innerText = `#${String(i).padStart(2, '0')}`;
+        item.appendChild(tag);
+
         grid.appendChild(item);
       }
     }
 
-    // 15. 燈箱 (Lightbox) 控制
+    // 13. 燈箱
     function openLightbox(idx) {
       const lightbox = document.getElementById('lightbox');
       const content = document.getElementById('lightboxContent');
-      const title = document.getElementById('lightboxTitle');
-      const note = document.getElementById('lightboxNote');
-      const infoPanel = document.getElementById('lightboxInfoPanel');
 
-      content.innerHTML = getImageHTML(idx, "max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl");
-      
-      const savedNote = config.customNotes[idx] || { title: "", desc: "" };
-      const hasTitle = !!savedNote.title;
-      const hasDesc = !!savedNote.desc;
-
-      if (hasTitle || hasDesc) {
-        infoPanel.style.display = 'block';
-        title.innerText = savedNote.title || `#${String(idx).padStart(2, '0')}`;
-        if (hasDesc) {
-          note.innerText = savedNote.desc;
-          note.style.display = 'block';
-        } else {
-          note.style.display = 'none';
-        }
-      } else {
-        infoPanel.style.display = 'none';
-      }
-
+      content.innerHTML = getImageHTML(idx, "max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl");
       lightbox.classList.remove('hidden');
       lightbox.classList.add('flex');
     }
@@ -887,21 +705,10 @@
       lightbox.classList.remove('flex');
     }
 
-    // 16. Notion 嵌入：加密打包與解密讀取
+    // 14. Notion 連結生成：完全排除備忘打包，使長度大幅縮減
     function generateEmbedUrl() {
       try {
-        const cleanedNotes = {};
-        for (const [key, value] of Object.entries(config.customNotes)) {
-          if (value.title || value.desc) {
-            cleanedNotes[key] = value;
-          }
-        }
-
         const dataToEncode = {
-          t: config.title,
-          st: config.subtitle,
-          p: config.project,
-          c: config.creator,
           tc: config.themeColor,
           dark: config.isDark,
           sm: config.sourceMode,
@@ -910,8 +717,7 @@
           fe: config.fileExtension,
           il: config.imgList,
           ap: config.autoplay,
-          it: config.interval,
-          n: cleanedNotes
+          it: config.interval
         };
 
         const jsonStr = JSON.stringify(dataToEncode);
@@ -921,9 +727,9 @@
         const embedUrl = `${baseUrl}?embed=true#${encodedData}`;
 
         copyToClipboard(embedUrl);
-        showToast("🌸 專屬加密網址複製成功！貼入 Notion 選擇「Create Embed」即可！");
+        showToast("🌸 專屬去備忘極簡網址已複製！快在 Notion 中貼上吧！");
       } catch (err) {
-        showToast("⚠️ 打包失敗，資料太龐大，請刪減部分文字故事！", "error");
+        showToast("⚠️ 生成失敗，請重試", "error");
       }
     }
 
@@ -933,6 +739,7 @@
       const isEmbed = urlParams.get('embed') === 'true';
 
       if (isEmbed) {
+        // 完全拔除編輯面板，100% 透明無痕
         document.getElementById('editPanel').remove(); 
         document.getElementById('glowBg').remove();
         document.getElementById('galleryWidget').classList.add('transparent-bg', 'shadow-none');
@@ -945,10 +752,6 @@
           const decodedJson = decodeURIComponent(atob(hash));
           const data = JSON.parse(decodedJson);
 
-          config.title = data.t || config.title;
-          config.subtitle = data.st || config.subtitle;
-          config.project = data.p || config.project;
-          config.creator = data.c || config.creator;
           config.themeColor = data.tc || config.themeColor;
           config.isDark = data.dark !== undefined ? data.dark : config.isDark;
           config.sourceMode = data.sm || config.sourceMode;
@@ -958,10 +761,9 @@
           config.imgList = data.il || config.imgList;
           config.autoplay = data.ap !== undefined ? data.ap : config.autoplay;
           config.interval = data.it || config.interval;
-          config.customNotes = data.n || config.customNotes;
 
         } catch (e) {
-          console.warn("無法解析加密 URL。");
+          console.warn("解析 hash 失敗，套用預設值。");
         }
       }
     }
@@ -969,11 +771,11 @@
     function toggleEditor() {
       const baseUrl = window.location.href.split('?')[0];
       const editWindow = window.open(baseUrl + window.location.hash, '_blank');
-      showToast("🌸 已在新視窗開啟編輯模式！");
+      showToast("🌸 已在新視窗開啟極簡編輯台！");
     }
 
     function resetConfig() {
-      if (confirm("確定要將所有編輯過的塗鴉作品資料與主題色彩還原為出廠設定嗎？")) {
+      if (confirm("確定要將所有色調、圖片路徑設定重置嗎？")) {
         window.location.hash = "";
         window.location.search = "";
         window.location.reload();
