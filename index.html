@@ -145,14 +145,14 @@
 
       </div>
 
-      <!-- Notion 嵌入模式的齒輪按鈕 -->
+      <!-- Notion 嵌入模式的齒輪按鈕 (預設隱藏，只有在 editMode 時才供管理者備用) -->
       <button id="embedSettingsBtn" onclick="toggleEditor()" class="hidden fixed bottom-4 right-4 w-10 h-10 rounded-full bg-white/80 dark:bg-zinc-900/80 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-lg border border-white/30 dark:border-white/10 hover:scale-105 active:scale-95 transition-all z-50">
         <svg class="w-5 h-5 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
     </div>
 
-    <!-- 右側：編輯控制台 -->
-    <div id="editPanel" class="w-full lg:w-96 flex flex-col gap-6 z-20">
+    <!-- 右側：編輯控制台 (預設加上 hidden 避免閃爍) -->
+    <div id="editPanel" class="hidden w-full lg:w-96 flex flex-col gap-6 z-20">
       <div class="glass-card rounded-3xl p-6 shadow-2xl flex flex-col gap-5 sticky top-8">
         <div class="border-b border-white/20 dark:border-white/5 pb-3">
           <h2 class="text-base font-bold flex items-center gap-2">
@@ -259,7 +259,7 @@
 
         </div>
 
-        <!-- 按鈕區：匯出 Notion 嵌入與重置 -->
+        <!-- 按鈕區 -->
         <div class="flex flex-col gap-2 border-t border-white/20 dark:border-white/5 pt-4">
           <button onclick="generateEmbedUrl()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 hover:from-pink-400 hover:to-indigo-400 text-slate-900 font-bold text-xs tracking-wider shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
@@ -306,7 +306,7 @@
       `<svg viewBox="0 0 100 100" class="w-full h-full p-8"><path d="M30,25 L70,25 L55,50 L70,75 L30,75 L45,50 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><line x1="25" y1="25" x2="75" y2="25" stroke="currentColor" stroke-width="3"/><line x1="25" y1="75" x2="75" y2="75" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="35" r="2" fill="currentColor"/><circle cx="50" cy="65" r="4" fill="currentColor"/><path d="M50,48 L50,58" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/></svg>`
     ];
 
-    // 主題色調配置對照表 (修復：先前被意外遺漏的 themes 物件定義)
+    // 主題色調配置對照表
     const themes = {
       '#ffd1dc': { light: '#ffd1dc', dark: '#502a33', bg: '#fff0f3' },
       '#e8dbfc': { light: '#e8dbfc', dark: '#372a50', bg: '#f7f3fd' },
@@ -354,14 +354,24 @@
 
     // 4. 同步資料與控制台輸入框
     function syncConfigToInputs() {
-      document.getElementById('iptImgPath').value = config.imgPath || "./image/";
-      document.getElementById('iptTotalImages').value = config.totalImages;
-      document.getElementById('iptFileExt').value = config.fileExtension;
-      document.getElementById('iptAutoplay').checked = config.autoplay;
-      document.getElementById('iptInterval').value = config.interval;
-      document.getElementById('iptImgList').value = config.imgList.join('\n');
+      // 確保輸入框存在才進行同步，避免 DOM 物理拔除後出錯
+      const pathIpt = document.getElementById('iptImgPath');
+      if (pathIpt) pathIpt.value = config.imgPath || "./image/";
       
-      setImageSourceMode(config.sourceMode);
+      const totalIpt = document.getElementById('iptTotalImages');
+      if (totalIpt) totalIpt.value = config.totalImages;
+      
+      const extIpt = document.getElementById('iptFileExt');
+      if (extIpt) extIpt.value = config.fileExtension;
+      
+      const autoIpt = document.getElementById('iptAutoplay');
+      if (autoIpt) autoIpt.checked = config.autoplay;
+      
+      const intIpt = document.getElementById('iptInterval');
+      if (intIpt) intIpt.value = config.interval;
+      
+      const listIpt = document.getElementById('iptImgList');
+      if (listIpt) listIpt.value = config.imgList.join('\n');
     }
 
     // 5. 主題配色與深色模式
@@ -405,7 +415,7 @@
       applyTheme();
     }
 
-    // 6. 圖片來源控制 (適應三模與多資料夾分箱路徑計算)
+    // 6. 三模圖片來源控制
     function setImageSourceMode(mode) {
       config.sourceMode = mode;
       
@@ -416,21 +426,24 @@
       const btnCustom = document.getElementById('sourceBtnCustom');
       const btnList = document.getElementById('sourceBtnList');
 
-      customPanel.classList.add('hidden');
-      listPanel.classList.add('hidden');
-      
-      btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
-      btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
-      btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+      // 檢查控制面板是否還存在於 DOM (防止唯讀模式時報錯)
+      if (customPanel && listPanel && btnMock && btnCustom && btnList) {
+        customPanel.classList.add('hidden');
+        listPanel.classList.add('hidden');
+        
+        btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+        btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+        btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
 
-      if (mode === 'custom') {
-        customPanel.classList.remove('hidden');
-        btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
-      } else if (mode === 'list') {
-        listPanel.classList.remove('hidden');
-        btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
-      } else {
-        btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
+        if (mode === 'custom') {
+          customPanel.classList.remove('hidden');
+          btnCustom.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
+        } else if (mode === 'list') {
+          listPanel.classList.remove('hidden');
+          btnList.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
+        } else {
+          btnMock.className = "flex-1 py-1 text-[10px] font-medium rounded-lg text-center bg-white dark:bg-zinc-800 shadow-sm text-slate-800 dark:text-white border border-white/10";
+        }
       }
 
       if (currentSlideIdx > getMaxImagesCount()) {
@@ -584,6 +597,7 @@
       updateSlideDots();
     }
 
+    // 左右切換
     function prevSlide() {
       const total = getMaxImagesCount();
       currentSlideIdx = currentSlideIdx - 1 < 1 ? total : currentSlideIdx - 1;
@@ -639,7 +653,6 @@
       }
     }
 
-    // 播放速度調整
     function updateInterval(seconds) {
       config.interval = parseInt(seconds) || 4;
       if (config.autoplay) {
@@ -670,7 +683,6 @@
 
       for (let i = 1; i <= total; i++) {
         const item = document.createElement('div');
-        // 極簡無標題 hover 設計：微放大發光
         item.className = "relative aspect-square rounded-2xl overflow-hidden bg-white/20 dark:bg-black/15 border border-white/20 dark:border-white/5 flex items-center justify-center p-3 cursor-pointer hover:scale-[1.03] hover:shadow-lg hover:border-pink-200 dark:hover:border-zinc-700 transition-all duration-300 group shadow-inner";
         item.onclick = () => openLightbox(i);
 
@@ -679,7 +691,6 @@
         imgWrapper.innerHTML = getImageHTML(i, "max-w-full max-h-full object-contain rounded-xl");
         item.appendChild(imgWrapper);
 
-        // 浮動遮罩僅在左下角標註超極簡序號，不再占大區塊顯示空白作品字樣
         const tag = document.createElement('div');
         tag.className = "absolute bottom-3 left-3 bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-lg text-[9px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300";
         tag.innerText = `#${String(i).padStart(2, '0')}`;
@@ -705,7 +716,7 @@
       lightbox.classList.remove('flex');
     }
 
-    // 14. Notion 連結生成：完全排除備忘打包，使長度大幅縮減
+    // 14. Notion 連結生成：安全隔離，產出不包含 ?edit=true 的觀賞連結
     function generateEmbedUrl() {
       try {
         const dataToEncode = {
@@ -724,27 +735,44 @@
         const encodedData = btoa(encodeURIComponent(jsonStr));
         
         const baseUrl = window.location.origin + window.location.pathname;
+        // 重要：這串網址不帶 ?edit=true，因此任何人打開或在 Notion 看見，編輯面板都會被 100% 銷毀
         const embedUrl = `${baseUrl}?embed=true#${encodedData}`;
 
         copyToClipboard(embedUrl);
-        showToast("🌸 專屬去備忘極簡網址已複製！快在 Notion 中貼上吧！");
+        showToast("🌸 專屬唯讀極簡網址已複製！快在 Notion 中貼上吧！");
       } catch (err) {
         showToast("⚠️ 生成失敗，請重試", "error");
       }
     }
 
+    // 15. 安全機制控制：偵測是否解鎖編輯器
     function loadUrlParams() {
       const hash = window.location.hash.substring(1);
       const urlParams = new URLSearchParams(window.location.search);
       const isEmbed = urlParams.get('embed') === 'true';
+      const isEditMode = urlParams.get('edit') === 'true'; // 是否手動解鎖了編輯器
 
-      if (isEmbed) {
-        // 完全拔除編輯面板，100% 透明無痕
-        document.getElementById('editPanel').remove(); 
-        document.getElementById('glowBg').remove();
-        document.getElementById('galleryWidget').classList.add('transparent-bg', 'shadow-none');
-        document.getElementById('galleryWidget').classList.remove('glass-card');
-        document.getElementById('embedSettingsBtn').classList.remove('hidden');
+      if (isEditMode) {
+        // 只有加上 ?edit=true 時，才展示編輯面板與背景特效
+        const editPanel = document.getElementById('editPanel');
+        if (editPanel) editPanel.classList.remove('hidden');
+      } else {
+        // 預設模式（不管是普通發布連結還是嵌入）：一律物理拔除編輯面板，防止任何人動手腳
+        const editPanel = document.getElementById('editPanel');
+        if (editPanel) editPanel.remove(); 
+        
+        const glowBg = document.getElementById('glowBg');
+        if (glowBg) glowBg.remove();
+
+        // 隱藏右下角的齒輪，任何人點開都不會再進入編輯頁面
+        const embedSettingsBtn = document.getElementById('embedSettingsBtn');
+        if (embedSettingsBtn) embedSettingsBtn.remove();
+
+        // Notion 嵌入模式下的水晶通透化
+        if (isEmbed) {
+          document.getElementById('galleryWidget').classList.add('transparent-bg', 'shadow-none');
+          document.getElementById('galleryWidget').classList.remove('glass-card');
+        }
       }
 
       if (hash) {
@@ -763,15 +791,16 @@
           config.interval = data.it || config.interval;
 
         } catch (e) {
-          console.warn("解析 hash 失敗，套用預設值。");
+          console.warn("解析 hash 失敗。");
         }
       }
     }
 
     function toggleEditor() {
+      // 只有在編輯模式下此齒輪才會備用載入
       const baseUrl = window.location.href.split('?')[0];
-      const editWindow = window.open(baseUrl + window.location.hash, '_blank');
-      showToast("🌸 已在新視窗開啟極簡編輯台！");
+      const editWindow = window.open(baseUrl + "?edit=true" + window.location.hash, '_blank');
+      showToast("🌸 已在新分頁打開編輯模式！");
     }
 
     function resetConfig() {
