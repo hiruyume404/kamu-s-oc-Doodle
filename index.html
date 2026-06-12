@@ -129,7 +129,7 @@
             </div>
           </div>
 
-          <!-- 下方故事備註面板 (新增 transition 高度自適應) -->
+          <!-- 下方故事備註面板 -->
           <div id="slideNotePanel" class="mt-4 p-4 rounded-2xl bg-white/50 dark:bg-zinc-900/30 border border-white/20 dark:border-white/5 flex flex-col gap-1 transition-all duration-300 min-h-0 justify-center">
             <div class="flex items-center justify-between w-full">
               <!-- 精緻序號標籤 -->
@@ -158,7 +158,7 @@
           </div>
         </div>
 
-        <!-- 卡片尾部：版權 -->
+        <!-- 卡片尾部 -->
         <div class="flex items-center justify-between border-t border-white/20 dark:border-white/5 pt-4 text-[10px] text-slate-400 dark:text-slate-500">
           <span id="dispProject">企劃所屬 ✦ 星光夢境記錄企劃</span>
           <span id="dispCreator">Painter ✦ 夢境觀察員</span>
@@ -180,9 +180,9 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-pink-500"></span>
             </span>
-            特鹽風塗鴉牆 ✦ 設計控制台
+            特鹽風相冊 ✦ 設計控制台
           </h2>
-          <p class="text-[10px] text-slate-400 mt-1">自訂卡片內容、配色，並打包成永久保存的網址</p>
+          <p class="text-[10px] text-slate-400 mt-1">自訂卡片配色，並打包成永久保存的網址</p>
         </div>
 
         <!-- 滾動面板 -->
@@ -234,27 +234,27 @@
             </div>
           </div>
 
-          <!-- 圖片來源設定 (升級：新增網址清單模式) -->
+          <!-- 圖片來源設定 -->
           <div class="flex flex-col gap-3">
-            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">3. 圖片來源與獲取設定</label>
+            <label class="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400">3. 圖片來源與託管設定</label>
             
             <!-- 三模選擇 -->
             <div class="flex bg-white/30 dark:bg-black/20 p-1 rounded-xl border border-white/20 gap-0.5">
               <button onclick="setImageSourceMode('mock')" id="sourceBtnMock" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300">內建展示</button>
-              <button onclick="setImageSourceMode('custom')" id="sourceBtnCustom" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">GitHub 序號</button>
+              <button onclick="setImageSourceMode('custom')" id="sourceBtnCustom" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">託管路徑</button>
               <button onclick="setImageSourceMode('list')" id="sourceBtnList" class="flex-1 py-1 text-[10px] font-medium rounded-lg text-center transition-all duration-300 text-slate-500">網址清單</button>
             </div>
 
-            <!-- GitHub 參數設定區 -->
+            <!-- 託管參數設定區 (智慧適應多資料夾分流模式) -->
             <div id="customSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
               <div class="flex flex-col gap-1">
-                <span class="text-[10px] text-slate-400">GitHub 圖片資料夾網址 (結尾加 /)</span>
-                <input type="text" id="iptImgPath" oninput="updateImgConfig()" placeholder="https://username.github.io/repo/images/" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white">
+                <span class="text-[10px] text-slate-400">預設資料夾相對路徑 (不需更動)</span>
+                <input type="text" id="iptImgPath" oninput="updateImgConfig()" placeholder="./image/" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono">
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <div class="flex flex-col gap-1">
                   <span class="text-[10px] text-slate-400">總圖片數量 (張)</span>
-                  <input type="number" id="iptTotalImages" oninput="updateImgConfig()" value="10" min="1" max="250" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none">
+                  <input type="number" id="iptTotalImages" oninput="updateImgConfig()" value="10" min="1" max="500" class="px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none">
                 </div>
                 <div class="flex flex-col gap-1">
                   <span class="text-[10px] text-slate-400">副檔名</span>
@@ -267,16 +267,16 @@
                 </div>
               </div>
               <p class="text-[9px] text-slate-400 leading-normal">
-                💡 適用於已熟悉並上傳小檔案的玩家。若檔案太大，建議切換為下方「網址清單」模式！
+                🚀 <b>智慧分流開啟：</b>系統偵測到您拆分了資料夾。圖片編號 1~100 會從 <code class="text-pink-500 font-mono">image/</code> 讀取，101~200 從 <code class="text-pink-500 font-mono">image(2)/</code> 讀取，201+ 從 <code class="text-pink-500 font-mono">image(3)/</code> 讀取！
               </p>
             </div>
 
-            <!-- 網址清單模式區 (New) -->
+            <!-- 網址清單模式區 -->
             <div id="listSourcePanel" class="hidden flex flex-col gap-2.5 p-3 rounded-2xl bg-white/30 dark:bg-black/25 border border-white/15">
               <span class="text-[10px] text-slate-400">批次貼入圖片直鏈 (一行輸入一個網址)</span>
               <textarea id="iptImgList" oninput="updateImgListConfig()" placeholder="https://catbox.moe/example1.png&#10;https://catbox.moe/example2.png&#10;https://catbox.moe/example3.png" rows="4" class="w-full px-3 py-1.5 text-xs rounded-xl bg-white/50 dark:bg-black/20 border border-white/20 outline-none text-slate-800 dark:text-white font-mono no-scrollbar resize-none"></textarea>
               <p class="text-[9px] text-slate-400 leading-normal">
-                💡 <b>最推薦！</b> 避開 GitHub 大容量限制，直接將 200+ 塗鴉丟到 Postimages / Catbox / Imgur，再把產出的網址全部複製貼入此框，免部屬也能直接在 Notion 流暢載入！
+                💡 <b>免部署：</b>若不想使用 GitHub Pages 託管，可將塗鴉批次上傳至 Postimages 等圖床，在此一行貼一個網址。
               </p>
             </div>
           </div>
@@ -343,7 +343,7 @@
         <!-- 放大圖片或 SVG -->
       </div>
     </div>
-    <!-- 燈箱備註面板 (ID: lightboxInfoPanel) -->
+    <!-- 燈箱備註面板 -->
     <div id="lightboxInfoPanel" class="mt-4 p-4 max-w-2xl bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl text-center" onclick="event.stopPropagation()">
       <h4 id="lightboxTitle" class="text-sm font-bold text-white">塗鴉作品</h4>
       <p id="lightboxNote" class="text-xs text-slate-300 leading-relaxed mt-1">無描述備註</p>
@@ -377,7 +377,7 @@
       '#cbd5e1': { light: '#e2e8f0', dark: '#2d3748', bg: '#f8fafc' }
     };
 
-    // 2. 預設全域設定 (只保留最基本的初始展示數據，新增 imgList 清單)
+    // 2. 預設全域設定
     let config = {
       title: "夢境邊緣 ✦ OC 塗鴉相冊",
       subtitle: "Doodles & Sketches Collection",
@@ -430,7 +430,7 @@
       document.getElementById('iptSubtitle').value = config.subtitle;
       document.getElementById('iptProject').value = config.project;
       document.getElementById('iptCreator').value = config.creator;
-      document.getElementById('iptImgPath').value = config.imgPath;
+      document.getElementById('iptImgPath').value = config.imgPath || "./image/"; // 預設改成您的 image
       document.getElementById('iptTotalImages').value = config.totalImages;
       document.getElementById('iptFileExt').value = config.fileExtension;
       document.getElementById('iptAutoplay').checked = config.autoplay;
@@ -486,7 +486,7 @@
       applyTheme();
     }
 
-    // 6. 三模圖片來源控制 (新增：網址清單 mode = 'list')
+    // 6. 三模圖片來源控制
     function setImageSourceMode(mode) {
       config.sourceMode = mode;
       
@@ -599,7 +599,33 @@
       renderSlide();
     }
 
-    // 9. 圖片渲染器（支援 List 模式直鏈渲染，備用 SVG fallback）
+    // 9. 核心智慧分流路徑計算：自動處理 image, image(2), image(3) 的路由分發
+    function getSmartRoutedPath(idx, originalPath) {
+      let path = originalPath.trim();
+      if (!path) {
+        path = "./image/"; // 預設為 ./image/
+      }
+      if (!path.endsWith('/')) {
+        path += '/';
+      }
+
+      // 如果路徑中有 image 字樣，觸發分箱分流算法
+      if (/image/i.test(path)) {
+        if (idx > 200) {
+          // 201+ 歸入 image(3)
+          return path.replace(/image(\(\d+\))?\/?$/i, "image(3)/");
+        } else if (idx > 100) {
+          // 101~200 歸入 image(2)
+          return path.replace(/image(\(\d+\))?\/?$/i, "image(2)/");
+        } else {
+          // 1~100 歸入原本的 image
+          return path.replace(/image(\(\d+\))?\/?$/i, "image/");
+        }
+      }
+      return path;
+    }
+
+    // 10. 圖片渲染器（支援相對目錄多資料夾自動分流與外部直鏈）
     function getImageHTML(idx, cssClasses = "max-w-full max-h-full object-contain rounded-xl") {
       if (config.sourceMode === 'mock') {
         const color = config.themeColor;
@@ -612,7 +638,6 @@
       } else if (config.sourceMode === 'list') {
         const url = config.imgList[idx - 1];
         if (!url) {
-          // 清單為空或索引溢出時，顯示一個漂亮手繪佔位
           return imgFallbackPlaceholder(idx);
         }
         return `
@@ -623,7 +648,9 @@
                onerror="imgLoadError(this, ${idx})">
         `;
       } else {
-        const imgSrc = `${config.imgPath}${idx}${config.fileExtension}`;
+        // 動態呼叫智慧分流路由
+        const targetFolder = getSmartRoutedPath(idx, config.imgPath);
+        const imgSrc = `${targetFolder}${idx}${config.fileExtension}`;
         return `
           <img src="${imgSrc}" 
                alt="Doodle #${idx}" 
@@ -640,7 +667,7 @@
       return `
         <div class="w-full h-full flex flex-col items-center justify-center p-6 transition-all duration-500" style="color: ${color}40;">
           ${svgContent}
-          <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">暫未填寫圖片直鏈 #${idx}</span>
+          <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono tracking-wider -mt-4">暫未偵測到外部圖檔 #${idx}</span>
         </div>
       `;
     }
@@ -652,7 +679,7 @@
       }
     }
 
-    // 10. 雙視圖模式切換
+    // 11. 雙視圖模式切換
     function switchMode(mode) {
       currentViewMode = mode;
       const viewSlide = document.getElementById('viewSlide');
@@ -676,7 +703,7 @@
       }
     }
 
-    // 11. 幻燈片控制邏輯
+    // 12. 幻燈片控制邏輯
     function renderSlide() {
       const container = document.getElementById('slideImageContainer');
       container.innerHTML = getImageHTML(currentSlideIdx, "max-w-full max-h-full object-contain rounded-xl hover:scale-[1.02] transition-transform duration-500 cursor-pointer");
@@ -759,7 +786,7 @@
       }
     }
 
-    // 12. 自動播放控制
+    // 13. 自動播放控制
     function toggleAutoplayConfig(isChecked) {
       config.autoplay = isChecked;
       if (isChecked) {
@@ -793,7 +820,7 @@
       }
     }
 
-    // 13. 相片牆網格渲染
+    // 14. 相片牆網格渲染
     function renderGrid() {
       const grid = document.getElementById('gridContainer');
       grid.innerHTML = '';
@@ -823,7 +850,7 @@
       }
     }
 
-    // 14. 燈箱燈箱控制
+    // 15. 燈箱 (Lightbox) 控制
     function openLightbox(idx) {
       const lightbox = document.getElementById('lightbox');
       const content = document.getElementById('lightboxContent');
@@ -860,7 +887,7 @@
       lightbox.classList.remove('flex');
     }
 
-    // 15. Notion 嵌入：加密打包與解密讀取
+    // 16. Notion 嵌入：加密打包與解密讀取
     function generateEmbedUrl() {
       try {
         const cleanedNotes = {};
@@ -881,7 +908,7 @@
           ip: config.imgPath,
           ti: config.totalImages,
           fe: config.fileExtension,
-          il: config.imgList, // 匯出清單
+          il: config.imgList,
           ap: config.autoplay,
           it: config.interval,
           n: cleanedNotes
@@ -928,7 +955,7 @@
           config.imgPath = data.ip || config.imgPath;
           config.totalImages = data.ti || config.totalImages;
           config.fileExtension = data.fe || config.fileExtension;
-          config.imgList = data.il || config.imgList; // 載入清單
+          config.imgList = data.il || config.imgList;
           config.autoplay = data.ap !== undefined ? data.ap : config.autoplay;
           config.interval = data.it || config.interval;
           config.customNotes = data.n || config.customNotes;
